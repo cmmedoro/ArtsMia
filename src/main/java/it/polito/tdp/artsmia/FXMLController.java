@@ -7,6 +7,7 @@ package it.polito.tdp.artsmia;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.artsmia.model.ArtObject;
 import it.polito.tdp.artsmia.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -47,12 +48,31 @@ public class FXMLController {
     
     @FXML
     void doAnalizzaOggetti(ActionEvent event) {
-
+    	this.model.creaGrafo();
+    	txtResult.appendText("Grafo creato!\n");
+    	txtResult.appendText("Numero vertici: "+this.model.numeroVertici()+"\n");
+    	txtResult.appendText("Numero archi: "+this.model.numeroArchi()+"\n");
     }
 
     @FXML
     void doCalcolaComponenteConnessa(ActionEvent event) {
-
+    	int objectId;
+    	try {
+    		objectId = Integer.parseInt(this.txtObjectId.getText());
+    	}catch(NumberFormatException e) {
+    		this.txtResult.setText("Devi inserire un codice numerico!");
+    		return;
+    	}
+    	//controllo che id corrisponda a un vertice ---> contains key con la mappa
+    	ArtObject vertice = this.model.getObject(objectId);
+    	
+    	if(vertice == null) {
+    		this.txtResult.setText("Oggetto inesistente");
+    		return;
+    	}
+    	
+    	int size = this.model.getComponenteConnessa(vertice);
+    	this.txtResult.appendText("Size componente connessa: "+size);
     }
 
     @FXML
